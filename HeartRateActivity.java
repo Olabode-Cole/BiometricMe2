@@ -243,6 +243,7 @@ public class HeartRateActivity extends AppCompatActivity {
 //Get System time（ms）
                 startTime = System.currentTimeMillis();
                 beats = 0;
+                //Check for push
 
                 //make request to put heartbeat into database
                 //need here is the userID & DAte
