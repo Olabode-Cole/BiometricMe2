@@ -9,6 +9,8 @@ import com.android.volley.toolbox.Volley;
  * Created by olabo on 07/02/2017.
  */
 
+//From Android Developer
+
 public class RequestHandler {
      private static RequestHandler mInstance;
      private RequestQueue mRequestQueue;

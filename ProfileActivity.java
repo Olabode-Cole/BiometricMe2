@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class ProfileActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
     private TextView textViewUsername, textViewUserEmail;
-
+    //Part i wrote with the help of Android developer & online tutorial
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity implements OnChartValueSe
         //textViewUserEmail.setText(SharedPrefManager.getInstance(this).getUserEmail());
         textViewUsername.setText(SharedPrefManager.getInstance(this).getUsername());
 
+        //MPChart tutorial
         ArrayList<Entry> yvalues = new ArrayList<Entry>();
         yvalues.add(new Entry(10f, 0));
         yvalues.add(new Entry(10f, 1));
@@ -80,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity implements OnChartValueSe
 
     }
 
-
+//Part i wrote with the help of Android developer & online tutorial
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

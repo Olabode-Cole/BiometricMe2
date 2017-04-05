@@ -252,6 +252,8 @@ public class HeartRateActivity extends AppCompatActivity {
 
                 //make request to put heartbeat into database
                 //need here is the userID & DAte
+
+                //Written my self
                 SharedPrefManager.getInstance(con).getUsername();
                 SharedPrefManager.getInstance(con).getID();
 

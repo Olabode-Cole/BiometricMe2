@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
  * Created by olabo on 07/02/2017.
  */
 
+//Android developer and online tutorial
+
 public class SharedPrefManager {
 
      private static SharedPrefManager mInstance;

@@ -6,6 +6,8 @@ package com.example.olabo.androidphp;
 
 public class Constants {
 
+    //Part i wrote
+
     private static final String ROOT_URL = "http://10.102.11.92/Android/v1/";
 
     public static final String URL_REGISTER = ROOT_URL+"registerUser.php";

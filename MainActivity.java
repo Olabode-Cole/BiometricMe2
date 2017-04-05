@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
+//Part i wrote with the help of Android developer & online tutorial
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editTextUsername, editTextEmail, editTextPassword;
