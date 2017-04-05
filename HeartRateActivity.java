@@ -34,12 +34,14 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HeartRateActivity extends AppCompatActivity {
-    private Timer timer = new Timer();
+    private static Timer timer = new Timer();
     private TimerTask task;
     private static int gx;
     private static int j;
     private static double flag=1;
     private Handler handler;
+
+    private static boolean started = false;
 
     private Context context;
     public static final String TAG = "HeartRateMonitor";
@@ -84,6 +86,7 @@ public class HeartRateActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heartrate);
         context = getApplicationContext();
@@ -155,6 +158,8 @@ public class HeartRateActivity extends AppCompatActivity {
         camera.release();
         camera = null;
     }
+
+
     private static Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
 
         public void onPreviewFrame(byte[] data, Camera cam) {
@@ -254,40 +259,41 @@ public class HeartRateActivity extends AppCompatActivity {
                 System.out.println(SharedPrefManager.getInstance(con).getID());
                 System.out.println(SharedPrefManager.getInstance(con).getUsername());
 
-                StringRequest stringRequest = new StringRequest(
-                        Request.Method.POST,
-                        Constants.HEART_INSERT,
-                        new Response.Listener<String>(){
-
-                            @Override
-                            public void onResponse(String response) {
-
-                            }
-                        },
-                        new Response.ErrorListener(){
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
 
 
-                                Toast.makeText(
-                                        con,
-                                        error.getMessage(),
-                                        Toast.LENGTH_LONG
-                                ).show();
-                            }
-                        }
-                ){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("userID", String.valueOf(SharedPrefManager.getInstance(con).getID()));
-                        return params;
-                    }
-                };
-                RequestHandler.getInstance(con).addToRequestQueue(stringRequest);
+                            String url = Constants.HEART_INSERT+"?userID="+SharedPrefManager.getInstance(con).getID()+"&beats="+beatsAvg+"&comment=Just woke up";
+                            StringRequest stringRequest = new StringRequest(
+                                    Request.Method.GET,
+                                    url,
+                                    new Response.Listener<String>(){
+
+                                        @Override
+                                        public void onResponse(String response) {
+
+                                        }
+                                    },
+                                    new Response.ErrorListener(){
+
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
 
 
+                                            Toast.makeText(
+                                                    con,
+                                                    error.getMessage(),
+                                                    Toast.LENGTH_LONG
+                                            ).show();
+                                        }
+                                    }
+                            ){
+                                @Override
+                                protected Map<String, String> getParams() throws AuthFailureError {
+                                    Map<String, String> params = new HashMap<>();
+                                    params.put("userID", String.valueOf(SharedPrefManager.getInstance(con).getID()));
+                                    return params;
+                                }
+                            };
+                            RequestHandler.getInstance(con).addToRequestQueue(stringRequest);
 
             }
             processing.set(false);
