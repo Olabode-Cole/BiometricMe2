@@ -1,84 +1,55 @@
 package com.example.olabo.androidphp;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ProfileActivity extends AppCompatActivity implements OnChartValueSelectedListener {
+public class ProfileActivity extends AppCompatActivity{
 
     private TextView textViewUsername, textViewUserEmail;
     //Part i wrote with the help of Android developer & online tutorial
+    private Context con;
+    private ListView result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        con = getApplicationContext();
+        result = (ListView)findViewById(R.id.listViewResult);
+
         if(!SharedPrefManager.getInstance(this).isLoggedIn()){
             finish();
             startActivity(new Intent(this, LoginActivity.class));
         }
-
         textViewUsername = (TextView) findViewById(R.id.textViewUsername);
        // textViewUserEmail = (TextView) findViewById(R.id.textViewUseremail);
-        PieChart pieChart = (PieChart) findViewById(R.id.piechart);
-        pieChart.setUsePercentValues(true);
+
 
         //textViewUserEmail.setText(SharedPrefManager.getInstance(this).getUserEmail());
         textViewUsername.setText(SharedPrefManager.getInstance(this).getUsername());
 
-        //MPChart tutorial
-        ArrayList<Entry> yvalues = new ArrayList<Entry>();
-        yvalues.add(new Entry(10f, 0));
-        yvalues.add(new Entry(10f, 1));
-        yvalues.add(new Entry(10f, 2));
-        yvalues.add(new Entry(10f, 3));
-        yvalues.add(new Entry(10f, 4));
-        yvalues.add(new Entry(10f, 5));
-        yvalues.add(new Entry(10f, 6));
 
-        PieDataSet dataSet = new PieDataSet(yvalues, "Days of the Week");
-
-        ArrayList<String> xVals = new ArrayList<String>();
-
-        xVals.add("Monday");
-        xVals.add("Tuesday");
-        xVals.add("Wednesday");
-        xVals.add("Thursday");
-        xVals.add("Friday");
-        xVals.add("Saturday");
-        xVals.add("Saturday");
-
-        PieData data = new PieData(xVals, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        pieChart.setData(data);
-        pieChart.setDescription("This is Pie Chart");
-        pieChart.setDrawHoleEnabled(true);
-        pieChart.setTransparentCircleRadius(25f);
-        pieChart.setHoleRadius(25f);
-        dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
-        data.setValueTextSize(13f);
-        data.setValueTextColor(Color.DKGRAY);
-        pieChart.setOnChartValueSelectedListener(this);
-        pieChart.animateXY(1400, 1400);
-
+        //get results
+        getUserResults();
     }
 
 //Part i wrote with the help of Android developer & online tutorial
@@ -93,9 +64,61 @@ public class ProfileActivity extends AppCompatActivity implements OnChartValueSe
         Intent i = new Intent(ProfileActivity.this,HeartRateActivity.class);
 
         ProfileActivity.this.startActivity(i);
+    }
+
+    private void getUserResults(){
+       String url = Constants.HEART_DATA + "?userID=" + SharedPrefManager.getInstance(con).getID();
+        System.out.println(url);
+        StringRequest stringRequest1 = new StringRequest(
+
+                Request.Method.GET,
+                url,
+                new Response.Listener<String>(){
+
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("List view: "+response);
+                        initialiseList(response);
+                    }
+                },
+                new Response.ErrorListener(){
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
 
+                        Toast.makeText(
+                                con,
+                                error.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+        ){
 
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("userID", String.valueOf(SharedPrefManager.getInstance(con).getID()));
+                return params;
+            }
+        };
+        RequestHandler.getInstance(con).addToRequestQueue(stringRequest1);
+    }
+
+    private void initialiseList(String response){
+        String [] beats = response.split("//");
+        ArrayList<String> forList = new ArrayList<>();
+        int i = 1;
+        for(String s: beats){
+            if(s.length()>0){
+                forList.add(s);
+                i++;
+            }
+        }
+
+        ArrayAdapter<String> adap = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,forList);
+        result.setAdapter(adap);
     }
 
     @Override
@@ -106,6 +129,19 @@ public class ProfileActivity extends AppCompatActivity implements OnChartValueSe
                 finish();
                 startActivity(new Intent(this,LoginActivity.class));
                 break;
+
+            case R.id.activity_main:
+                SharedPrefManager.getInstance(this).Placepicker();
+                finish();
+                startActivity(new Intent(this,LocationMainActivity.class));
+                break;
+
+            case R.id.activity_tutorial:
+                SharedPrefManager.getInstance(this).Tutorials();
+                finish();
+                startActivity(new Intent(this,TutorialActivity.class));
+                break;
+
             case R.id.menuSettings:
                 Toast.makeText(this, "You clicked settings", Toast.LENGTH_LONG).show();
                 break;
@@ -113,20 +149,6 @@ public class ProfileActivity extends AppCompatActivity implements OnChartValueSe
         return true;
     }
 
-    @Override
-    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-        if (e == null)
-        return;
-        Log.i("VAL SELECTED",
-                "Value: " + e.getVal() + ", xIndex: " + e.getXIndex()
-                + ", DataSet index: " + dataSetIndex);
-
-    }
-
-    @Override
-    public void onNothingSelected() {
-        Log.i("PieChart", "nothing selected");
-        }
 
     }
 

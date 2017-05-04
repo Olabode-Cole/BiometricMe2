@@ -58,7 +58,7 @@ public class HeartRateActivity extends AppCompatActivity {
     private static SurfaceHolder previewHolder = null;
     private static Camera camera = null;
     private static View image;
-    private static TextView text = null;
+    private static TextView text3 = null;
     private static TextView text1 = null;
     private static TextView text2 = null;
     private static PowerManager.WakeLock wakeLock = null;
@@ -114,12 +114,12 @@ public class HeartRateActivity extends AppCompatActivity {
 
         timer.schedule(task, 1,20);
 
-        preview = (SurfaceView) findViewById(R.id.preview);
+       preview =(SurfaceView) findViewById(R.id.preview);
         previewHolder = preview.getHolder();
         previewHolder.addCallback(surfaceCallback);
         previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         //		image = findViewById(R.id.image);
-        text = (TextView) findViewById(R.id.text);
+        text3 = (TextView) findViewById(R.id.text3);
         text1 = (TextView) findViewById(R.id.text1);
         text2 = (TextView) findViewById(R.id.text2);
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -163,6 +163,17 @@ public class HeartRateActivity extends AppCompatActivity {
     private static Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
 
         public void onPreviewFrame(byte[] data, Camera cam) {
+
+
+//            try {
+//                Thread.sleep(5000); //1000 milliseconds is one second.
+//            } catch(InterruptedException ex) {
+//                Thread.currentThread().interrupt();
+//            }
+//
+//            System.out.println("dnsfjnf");
+
+
             if (data == null)
                 throw new NullPointerException();
             Camera.Size size = cam.getParameters().getPreviewSize();
@@ -182,6 +193,8 @@ public class HeartRateActivity extends AppCompatActivity {
                 processing.set(false);
                 return;
             }
+
+
 
             int averageArrayAvg = 0;
             int averageArrayCnt = 0;
@@ -244,7 +257,7 @@ public class HeartRateActivity extends AppCompatActivity {
                     }
                 }
                 final int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
-                text.setText("Your heart rate is : "+String.valueOf(beatsAvg));
+                text3.setText("Your heart rate is : "+String.valueOf(beatsAvg));
 //Get System time（ms）
                 startTime = System.currentTimeMillis();
                 beats = 0;
@@ -288,6 +301,7 @@ public class HeartRateActivity extends AppCompatActivity {
                                         }
                                     }
                             ){
+
                                 @Override
                                 protected Map<String, String> getParams() throws AuthFailureError {
                                     Map<String, String> params = new HashMap<>();
@@ -296,6 +310,8 @@ public class HeartRateActivity extends AppCompatActivity {
                                 }
                             };
                             RequestHandler.getInstance(con).addToRequestQueue(stringRequest);
+
+
 
             }
             processing.set(false);
