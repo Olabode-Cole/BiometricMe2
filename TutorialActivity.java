@@ -23,7 +23,7 @@ public class TutorialActivity extends AppCompatActivity {
         VideoView videoView = (VideoView)findViewById(R.id.videoView);
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
-        Uri uri = Uri.parse("rtsp://r9---sn-5hnedn7y.googlevideo.com/Cj0LENy73wIaNAmvRsEdwm_1ChMYDSANFC1BvARZMOCoAUIASARg8_a5t-HFyplYigELOFZBRHN2QUNBemcM/C2B7518CA13B656220B52B410E447B21E7C37D1E.4EC2D93A15117806D88758717CC04A4FDE8BE2B7/yt6/1/video.3gp");
+        Uri uri = Uri.parse("rtsp://r1---sn-5hne6n7s.googlevideo.com/Cj0LENy73wIaNAm0GyR0F5EEzxMYDSANFC0rkgxZMOCoAUIASARg8_a5t-HFyplYigELOFZBRHN2QUNBemcM/5B737129EF262B4A7D875717C41C3ECC843C0755.B15BDD41D691C7EDB5A9E282AA000EFE252D250C/yt6/1/video.3gp")
         videoView.setMediaController(mediaController);
         videoView.setVideoURI(uri);
         videoView.requestFocus();
